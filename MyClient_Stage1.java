@@ -3,15 +3,15 @@
     import java.util.ArrayList;
     public class MyClient_Stage1 {
 
-      private int serverNumber;
-      private static String serverType="yes";
-      private static int serverID=0;
-      private static int serverCore;
+      private int ServerNum;
+      private static String ServerType=" ";
+      private static int SerID=0;
+      private static int ServerCore;
       private static int jobID;
-      private static int largestServerCount;
+      private static int HighestSerCount;
       private static int schedule;
-      private static ArrayList < String > servers = new ArrayList < String > ();
-      private static boolean flag = false;
+      private static ArrayList < String > ServerLargestList = new ArrayList < String > ();
+      private static boolean haveJob = false;
 
       public static void main(String[] args) {
         try {
@@ -59,20 +59,20 @@
               dout.write(("OK\n").getBytes());
               dout.flush();
  
-              if(flag==true){
+              if(haveJob==true){
                 for (int i=0;i<serverCount;i++){
                    str=in.readLine();
                    }
-              }else if(flag !=true){              
+              }else if(haveJob !=true){              
                   for (int i = 0; i < serverCount; i++) {
                   str = in.readLine();
-                  servers.add(str);
+                  ServerLargestList.add(str);
                   String serverInfo[] = str.split(" ");
                   //finding the largest server
-                  if (Integer.parseInt(serverInfo[4]) > serverCore) {
-                    serverType = serverInfo[0];
-                    serverID = Integer.parseInt(serverInfo[1]);
-                    serverCore = Integer.parseInt(serverInfo[4]);
+                  if (Integer.parseInt(serverInfo[4]) > ServerCore) {
+                    ServerType = serverInfo[0];
+                    SerID = Integer.parseInt(serverInfo[1]);
+                    ServerCore = Integer.parseInt(serverInfo[4]);
                   }
                  
                 }
@@ -90,7 +90,7 @@
 
               LRR(schedule);
              
-              dout.write(("SCHD " + jobID + " " + serverType + " " + serverID + "\n").getBytes());
+              dout.write(("SCHD " + jobID + " " + ServerType + " " + SerID + "\n").getBytes());
               dout.flush();
               str = in .readLine();
               System.out.println("RCVD: " + str);
@@ -122,20 +122,20 @@
      
       // counting how many largest servers are there
       public static void CountLargestServer(){
-       if(flag!=true){
-              for (int i=0; i<servers.size();i++){
-              String string [] = servers.get(i).split(" ");
-               if (serverType.equals(string[0]) && serverCore == Integer.parseInt(string[4])) {
-                    largestServerCount++;
-                    flag=true;
+       if(haveJob!=true){
+              for (int i=0; i<ServerLargestList.size();i++){
+              String string [] = ServerLargestList.get(i).split(" ");
+               if (ServerType.equals(string[0]) && ServerCore == Integer.parseInt(string[4])) {
+                    HighestSerCount++;
+                    haveJob=true;
               }
               }
              }
              }
              //to schedule jobs we will find the remainder
               public static int LRR(int schedule){
-              schedule = jobID % largestServerCount;
-              serverID = schedule;
+              schedule = jobID % HighestSerCount;
+              SerID = schedule;
        return schedule;      
       }
     }
